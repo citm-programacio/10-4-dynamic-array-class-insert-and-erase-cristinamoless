@@ -1,20 +1,51 @@
-// ConsoleApplication7.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <string>
+using namespace std;
+class DynamicArray {
+private:
+	int size, capacity;
+	string* array;
+	void resize() {
+		capacity *= 2;
+		string* narray = new string[capacity];
+		for (int i = 0; i < size; i++) {
+			narray[i] = array[i];
+		}
+		delete[] array;
+		array = narray;
+	}
+public:
 
-int main()
-{
-    std::cout << "Hello World!\n";
+	DynamicArray() : size(0), capacity(10), array(new string[capacity]) {}
+	~DynamicArray() {
+		delete[] array;
+	}
+	bool insert(string newElement, int position) {
+		if (position < 0 || position > size) {
+			return false;
+		}
+		if (size == capacity) {
+			resize();
+		}
+		size++;
+		for (int i = size; i > position; i--) {
+			array[i] = array[i - 1];
+		}
+		array[position] = newElement;
+		return true;
+	}
+	bool remove(int position) {
+		if (position < 0 || position > size) {
+			return false;
+		}
+		for (int i = position; i < size; i++) {
+			array[i] = array[i + 1];
+		}
+		size--;
+		return true;
+	}
+};
+int main() {
+	DynamicArray a;
+
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
